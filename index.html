@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte avec curseur de profondeur</title>
+
+  <!-- Feuilles de style locales et de Leaflet -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/toolbar.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Bootstrap TouchSpin CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.3.0/jquery.bootstrap-touchspin.min.css">
+</head>
+
+<body>
+  <!-- Conteneur de la carte pour le suivi en temps réel -->
+  <div id="map"></div>
+  
+
+
+  <!-- Toolbar latérale -->
+  <div id="toolbar" class="toolbar">
+      <!-- Section : Fichier -->
+      <div class="toolbar-section" id="section-file">
+        <button class="toolbar-section-btn" id="file-section-toggle">
+            <img src="assets/icons/file-section.svg" alt="Fichier">
+        </button>
+  
+        <div id="file-controls">
+            <button class="toolbar-btn" id="btn-save">
+                <img src="assets/icons/save.svg" alt="Sauvegarder">
+            </button>
+            <button class="toolbar-btn" id="btn-load">
+                <img src="assets/icons/load.svg" alt="Charger">
+            </button>
+        </div>
+    </div>
+    <!-- Section : Polygone -->
+    <div class="toolbar-section" id="section-polygon">
+        <button class="toolbar-section-btn" id="polygon-section-toggle">
+            <img src="assets/icons/polygon-section.svg" id="polygon-section-icon" alt="Polygone">
+          </button>
+          
+      
+        <div id="polygon-controls">
+          <button class="toolbar-btn" id="btn-create-polygon">
+            <img src="assets/icons/polygon-create.svg" alt="Créer">
+          </button>
+      
+          <button class="toolbar-btn" id="btn-delete-polygon">
+            <img src="assets/icons/polygon-delete.svg" alt="Supprimer">
+          </button>
+      
+          <button class="toolbar-btn" id="btn-settings">
+            <img src="assets/icons/settings.svg" alt="Réglages">
+          </button>
+
+          <button class="toolbar-btn" id="btn-toggle-lock">
+            <img src="assets/icons/lock-open.svg" alt="Verrouiller" id="icon-lock">
+          </button>
+        </div>
+      </div>
+
+    <!-- Section : Drone -->
+    <div class="toolbar-section" id="section-drone">
+      <button class="toolbar-section-btn" id="drone-section-toggle">
+        <img src="assets/icons/drone-section.svg" alt="Drone">
+      </button>
+
+      <div id="drone-controls" class="toolbar-subsection" style="display: none;">
+        <button class="toolbar-btn" id="btn-connect-drone">
+          <img src="assets/icons/plug.svg" alt="Connecter">
+        </button>
+
+        <button class="toolbar-btn" id="btn-center">
+          <img src="assets/icons/center.svg" alt="Centrer sur drone">
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Section : Affichage -->
+    <div class="toolbar-section" id="section-display">
+      <button class="toolbar-section-btn" id="display-section-toggle">
+        <img src="assets/icons/style-section.svg" alt="Affichage">
+      </button>
+
+      <div id="display-controls" class="toolbar-controls">
+        <button class="toolbar-btn" id="btn-layers-popup">
+          <img src="assets/icons/layers.svg" alt="Couches">
+        </button>
+
+        <button class="toolbar-btn" id="btn-basemap-popup">
+          <img src="assets/icons/map.svg" alt="Fond de carte">
+        </button>
+      </div>
+    </div>
+
+  <!-- Tu ajouteras d'autres sections ici plus tard -->
+  </div>
+  
+
+
+  <!-- Panneau sliders dépliable -->
+  <div id="slidersContainer" class="slider-popup">
+    <div class="slider-container">
+      <label for="profondeurInput">Profondeur (m) :</label>
+      <div>
+        <button class="btn-slider" id="profondeurMinus">-</button>
+        <input type="range" id="profondeurInput" min="2" max="4" step="0.1" value="3">
+        <button class="btn-slider" id="profondeurPlus">+</button>
+        <span id="profondeurValue">3</span> m
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <label for="penteInput">Pente (%) :</label>
+      <div>
+        <button class="btn-slider" id="penteMinus">-</button>
+        <input type="range" id="penteInput" min="0" max="100" step="0.5" value="33">
+        <button class="btn-slider" id="pentePlus">+</button>
+        <span id="penteValue">33</span> %
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <label for="cellSizeInput">Taille du maillage (m) :</label>
+      <div>
+        <button class="btn-slider" id="cellSizeMinus">-</button>
+        <input id="cellSizeInput" type="range" min="1" max="30" step="1" value="10">
+        <button class="btn-slider" id="cellSizePlus">+</button>
+        <span id="cellSizeValue">10</span> m
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <label for="rotationInput">Rotation de la grille (°) :</label>
+      <div>
+        <button class="btn-slider" id="rotationMinus">-</button>
+        <input id="rotationInput" type="range" min="-45" max="45" step="0.5" value="0">
+        <button class="btn-slider" id="rotationPlus">+</button>
+        <span id="rotationValue">0°</span>
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <label for="circleRadiusSlider">Rayon de validation (m) :</label>
+      <div>
+        <button class="btn-slider" id="circleRadiusMinus">-</button>
+        <input id="circleRadiusInput" type="range" id="circleRadiusSlider" min="0.5" max="5" step="0.1" value="2.0">
+        <button class="btn-slider" id="circleRadiusPlus">+</button>
+        <span id="circleRadiusValue">2.0</span> m</label>
+      </div>   
+    </div>
+    
+    <div class="slider-container"></div>
+        <button id="btn-reset-sliders" class="btn btn-sm btn-secondary">Réinitialiser</button>
+    </div>
+  </div>
+
+
+
+<!-- Popup de gestion de la visibilité des couches -->
+<div id="layers-popup" class="display-popup hidden">
+  <h4>🧭 Couches visibles</h4>
+  <div class="layer-checkboxes">
+    <label><input type="checkbox" id="chk-polygon" checked> Polygone</label>
+    <label><input type="checkbox" id="chk-buffer-fond" checked> Buffer Fond</label>
+    <label><input type="checkbox" id="chk-buffer-demi" checked> Buffer Demi</label>
+    <label><input type="checkbox" id="chk-grille" checked> Grille</label>
+    <label><input type="checkbox" id="chk-points-fond" checked> Sommets fond</label>
+    <label><input type="checkbox" id="chk-points-pente" checked> Sommets pente</label>
+    <label><input type="checkbox" id="chk-points-bord"> Sommets bord</label>
+    <label><input type="checkbox" id="chk-validation-circles" checked> Cercles de validation</label>
+    <label><input type="checkbox" id="chk-distances" checked /> Distances entre les sommets</label>
+    
+  </div>
+</div>
+
+
+
+<!-- Popup de sélection du fond de carte -->
+<div id="basemap-popup" class="display-popup hidden">
+  <h4>🗺️ Fond de carte</h4>
+  <div class="basemap-options">
+    <label for="basemap-select">Choisir la vue :</label>
+    <select id="basemap-select">
+      <option value="googlemaps">Google Maps</option>
+      <option value="satellite">Satellite</option>
+      <!-- Tu pourras en ajouter d'autres ici -->
+    </select>
+  </div>
+</div>
+
+
+<!-- Popup Drone -->
+<div id="drone-popup" class="drone-popup hidden">
+  <h2>Connexion au drone</h2>
+  <button id="popup-connect-btn" class="toolbar-btn">🔌 Se connecter</button>
+  <div id="gpsStatus">🔄 En attente du signal GPS...</div>
+  <div id="timeDisplay">Heure : --:--:--</div>
+</div>
+
+
+
+  <!-- Info-bulle -->
+  <div id="infoBubble" class="info-bubble">
+    Nombre de points de mesure : 0
+  </div>  
+  <!-- À ajouter dans ton HTML quelque part (ex: dans le popup ou sous la carte) -->
+  <div id="validationCounter" class="info-bubble">
+    ✅ Points validés : 0 / 0
+  </div>
+
+
+  <!-- Zone de chargement / sauvegarde -->
+  <input type="file" id="fileInput" style="display:none;">
+
+  <!-- Bibliothèques externes -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Leaflet/Leaflet.Editable@latest/src/Leaflet.Editable.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.3.0/jquery.bootstrap-touchspin.min.js"></script>
+
+  <!-- Script principal -->
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

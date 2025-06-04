@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  
+  <!-- Corps central -->
+  <circle cx="12" cy="12" r="2.2" />
+
+  <!-- Bras du drone (croix) -->
+  <line x1="12" y1="12" x2="5" y2="5" />
+  <line x1="12" y1="12" x2="19" y2="5" />
+  <line x1="12" y1="12" x2="5" y2="19" />
+  <line x1="12" y1="12" x2="19" y2="19" />
+
+  <!-- Hélice haut gauche -->
+  <circle cx="5" cy="5" r="3" />
+  <circle cx="5" cy="5" r="0.8" fill="currentColor" />
+
+  <!-- Hélice haut droite -->
+  <circle cx="19" cy="5" r="3" />
+  <circle cx="19" cy="5" r="0.8" fill="currentColor" />
+
+  <!-- Hélice bas gauche -->
+  <circle cx="5" cy="19" r="3" />
+  <circle cx="5" cy="19" r="0.8" fill="currentColor" />
+
+  <!-- Hélice bas droite -->
+  <circle cx="19" cy="19" r="3" />
+  <circle cx="19" cy="19" r="0.8" fill="currentColor" />
+</svg>

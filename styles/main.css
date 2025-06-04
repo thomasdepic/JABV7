@@ -1,0 +1,52 @@
+/* main.css */
+
+/* Réinitialisation et styles généraux */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+/* La carte occupe la majeure partie de l'espace */
+#map {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Styles globaux pour les panneaux */
+section {
+  padding: 10px;
+}
+
+/* Cache par défaut les panneaux que l'on ne souhaite pas afficher */
+.hidden {
+  display: none;
+}
+
+/* Positionnement commun pour les bulles d'information */
+.info-bubble {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1001;
+  pointer-events: none;
+}
+
