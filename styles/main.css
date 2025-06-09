@@ -50,3 +50,22 @@ section {
   pointer-events: none;
 }
 
+
+#validateButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  padding: 16px 24px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+#validateButton:hover {
+  background-color: #45a049;
+}
+

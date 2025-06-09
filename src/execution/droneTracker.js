@@ -13,18 +13,30 @@ export function initExecutionModeLive() {
 
   updateValidationCount();
 
-  // Écoute automatique des positions reçues (optionnel si on ne veut pas valider auto)
+  // Écoute automatique des positions reçues
   setOnPositionUpdate(({ lat, lng }) => {
     console.log("📍 Position GPS reçue :", lat, lng);
-    // validateClosestPoint({ lat, lng }); // désactivé pour mode manuel
+    window.lastDronePosition = [lat, lng];
     highlightNearbyPoint({ lat, lng });
   });
 
-  // Autorise validation manuelle avec Entrée
+  // Écoute du bouton pour valider manuellement
+  const validateButton = document.getElementById("validateButton");
+  if (validateButton) {
+    validateButton.addEventListener("click", () => {
+      if (lat !== null && lng !== null) {
+        console.log("🖱️ Bouton appuyé → validation GPS manuelle");
+        validateClosestPoint({ lat, lng });
+      } else {
+        console.warn("⚠️ Position GPS non disponible !");
+      }
+    });
+  }
+
+  // L'ancien code pour la touche "Entrée"
   keyDownHandler = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // 🔒 Empêche le bouton de mode d’être déclenché
-  
+      e.preventDefault();
       if (lat !== null && lng !== null) {
         console.log("⌨️ Entrée pressée → validation GPS manuelle");
         validateClosestPoint({ lat, lng });
@@ -33,6 +45,7 @@ export function initExecutionModeLive() {
   };
   window.addEventListener("keydown", keyDownHandler);
 }
+
 
 function getDetectionRadius() {
   const slider = document.getElementById("circleRadiusInput");
@@ -108,17 +121,21 @@ function highlightNearbyPoint(pos) {
 
 
 
-function updateValidationCount() {
-  if (!window.addedPoints) return;
+export function updateValidationCount() {
+  const allPoints = [
+    ...(window.fondPoints || []),
+    ...(window.pentePoints || []),
+  ];
 
-  const total = window.addedPoints.length;
-  const visited = window.addedPoints.filter(p => p.visited).length;
+  const total = allPoints.length;
+  const visited = allPoints.filter(p => p.visited).length;
 
   const counter = document.getElementById("validationCounter");
   if (counter) {
-    counter.textContent = `✅ Points validés : ${visited} / ${total}`;
+    counter.textContent = `Points validés : ${visited} / ${total}`;
   }
 }
+
 
 export function centerOnDrone() {
   // Exemple d'implémentation

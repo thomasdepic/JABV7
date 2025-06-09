@@ -276,7 +276,6 @@ export function generateIntersections() {
   PointUtils.showPoints(window.fondPointsLayer, window.fondPoints, 5);
   PointUtils.showPoints(window.pentePointsLayer, window.pentePoints, 5);
   PointUtils.showPoints(window.bordPointsLayer, window.bordPoints, 5);
-  document.getElementById("infoBubble").innerHTML = "Nombre de point de mesure : " + window.intersectionCount;
 
   // ➕ Création des cercles de validation
   if (window.detectionCircles && Array.isArray(window.detectionCircles)) {

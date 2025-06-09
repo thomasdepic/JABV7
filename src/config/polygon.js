@@ -1,6 +1,7 @@
 import { updateBufferFond } from './bufferFond.js';
 import { updateBufferDemi } from './bufferDemi.js';
 import { generateIntersections } from './intersections.js';
+import { updateValidationCount } from '../execution/droneTracker.js';
 
 window.distanceLabels = [];
 
@@ -51,6 +52,7 @@ export function updatePolygon() {
   updateBufferFond();
   updateBufferDemi();
   generateIntersections();
+  updateValidationCount();
 }
 
 export function initPolygon() {
